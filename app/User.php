@@ -49,4 +49,19 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function isVerified()
+    {
+        return $this->verified == User::VERIFIED_USER;
+    }
+
+    public function isAdmin()
+    {
+        return $this->verified == User::ADMIN_USER;
+    }
+
+    public static function generateVerificationCode()
+    {
+        return str_random(40);
+    }
 }
