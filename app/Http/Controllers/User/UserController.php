@@ -66,7 +66,9 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        //
+        $user = User::findOrFail($id);
+
+        return response()->json(['data' => $user], 200);
     }
 
     /**
@@ -89,7 +91,39 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $user = User::findOrFail($id);
+
+        $rules = [
+            'email' => 'email|unique:users,email'. $user->id,
+            'password' => 'min:6|confirmed',
+            'user' => 'in:'. User::ADMIN_USER . ','. User::REGULAR_USER,
+        ];
+
+        if ($request->has('name')){
+            $user->name = $request->name;
+        }
+
+        if ($request->has('email') && $user->email != $request->email){
+
+            $user->email = $request->email;
+            $user->verified = User::UNVERIFIED_USER;
+            $user->verification_token = User::generateVerificationCode();
+        }
+
+        if ($request->has('password')){
+            $user->password = bcrypt($request->password);
+        }
+
+        if($request->has('admin')){
+            if (!$user->isVerified()){
+                return response()->json([
+                    'error' => 'Only verified users can modify the admin field',
+                    'code' => 409
+                ], 409);
+            }
+
+            $user->admin = $request->admin;
+        }
     }
 
     /**
