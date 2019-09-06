@@ -123,6 +123,8 @@ class UserController extends Controller
             }
 
             $user->admin = $request->admin;
+
+            $user->save();
         }
     }
 
