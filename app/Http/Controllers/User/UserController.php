@@ -125,6 +125,8 @@ class UserController extends Controller
             $user->admin = $request->admin;
 
             $user->save();
+
+            return response()->json(['data' => $user], 200);
         }
     }
 
