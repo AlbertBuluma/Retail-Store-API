@@ -15,9 +15,10 @@ class BuyerController extends ApiController
      */
     public function index()
     {
-        $buyer = Buyer::has('transactions')->get();
+        $buyers = Buyer::has('transactions')->get();
 
-        return response()->json(['buyer' => $buyer], 200);
+//        return response()->json(['buyer' => $buyer], 200);
+        return $this->showAll($buyers);
     }
 
     /**
