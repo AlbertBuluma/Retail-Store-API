@@ -125,6 +125,15 @@ class UserController extends ApiController
                 ], 409);
             }
 
+        if(!$user->isDirty()){
+
+            return $this->errorResponse('You need to specify a different value to update', 422);
+//            return response()->json([
+//                'error' => 'You need to specify a different value to update',
+//                'code' => 422
+//            ], 422);
+        }
+
             $user->admin = $request->admin;
 
             $user->save();
